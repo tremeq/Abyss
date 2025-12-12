@@ -1,0 +1,145 @@
+# ============================================================
+#                    Abyss Configuration File
+#                        Author: tremeq
+# ============================================================
+
+# Plugin language (pl / en)
+# Set to 'pl' for Polish or 'en' for English
+language: pl
+
+# ============================================================
+#                      GUI Settings
+# ============================================================
+gui:
+  # GUI title (supports color codes & and HEX #FFFFFF)
+  title: '&8&lOtchłań'
+
+  # GUI size (9, 18, 27, 36, 45, 54)
+  # NOTE: The last row is reserved for navigation buttons!
+  size: 54
+
+# ============================================================
+#                  Auto-Open Settings
+# ============================================================
+# NOTE: By default, GUI opens ONLY via commands (/abyss or /otchlan)
+# You can enable automatic opening below if desired
+auto-open:
+  # Enable automatic GUI opening for all players
+  # Set to 'false' to allow GUI opening only via commands (recommended)
+  enabled: false
+
+  # Interval in seconds between GUI openings
+  interval: 300
+
+  # Duration in seconds that the GUI stays open
+  duration: 10
+
+# ============================================================
+#               Item Collection Settings
+# ============================================================
+item-collection:
+  # Enable automatic item collection from ground
+  enabled: true
+
+  # Interval in seconds between collection cycles
+  interval: 60
+
+  # Notify players when items are collected
+  notify-players: true
+
+  # World blacklist - items from these worlds will NOT be collected
+  # Add world names you want to exclude from collection
+  world-blacklist:
+    - world_nether
+    - world_the_end
+    # - your_custom_world
+
+# ============================================================
+#               Navigation Buttons Settings
+# ============================================================
+navigation:
+
+  # Glass pane filler for the bottom navigation bar
+  glass-filler:
+    # Enable glass filler
+    enabled: true
+
+    # Glass material (e.g., GRAY_STAINED_GLASS_PANE, BLACK_STAINED_GLASS_PANE, PURPLE_STAINED_GLASS_PANE)
+    material: GRAY_STAINED_GLASS_PANE
+
+    # Glass pane name (use ' ' for empty/invisible name)
+    name: ' '
+
+  # Previous page button
+  previous-page:
+    # Enable previous page button
+    enabled: true
+
+    # Button slot in navigation bar (0-8, bottom row)
+    slot: 0
+
+    # Button material
+    material: ARROW
+
+    # Button name (from messages file)
+    name-key: navigation.previous.name
+
+    # Button lore (from messages file)
+    lore-key: navigation.previous.lore
+
+  # Next page button
+  next-page:
+    # Enable next page button
+    enabled: true
+
+    # Button slot in navigation bar (0-8, bottom row)
+    slot: 8
+
+    # Button material
+    material: ARROW
+
+    # Button name (from messages file)
+    name-key: navigation.next.name
+
+    # Button lore (from messages file)
+    lore-key: navigation.next.lore
+
+  # Close button
+  close:
+    # Enable close button
+    enabled: true
+
+    # Button slot in navigation bar (0-8, bottom row)
+    slot: 5
+
+    # Button material
+    material: BARRIER
+
+    # Button name (from messages file)
+    name-key: navigation.close.name
+
+    # Button lore (from messages file)
+    lore-key: navigation.close.lore
+
+  # Info button
+  info:
+    # Enable info button
+    enabled: true
+
+    # Button slot in navigation bar (0-8, bottom row)
+    slot: 3
+
+    # Button material
+    material: BOOK
+
+    # Button name (from messages file)
+    name-key: navigation.info.name
+
+    # Button lore (from messages file)
+    lore-key: navigation.info.lore
+
+# ============================================================
+#                    Debug Settings
+# ============================================================
+# Enable debug mode for detailed console logging
+debug: false

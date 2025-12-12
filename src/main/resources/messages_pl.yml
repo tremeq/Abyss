@@ -1,0 +1,59 @@
+# Polskie wiadomości dla pluginu Abyss
+# Autor: tremeq
+# Obsługuje kody kolorów (&a, &c, &l itp.) oraz HEX (#FFFFFF)
+
+# Prefix używany w wiadomościach
+prefix: '&8[&5Otchłań&8]&r'
+
+# Wiadomości komend
+commands:
+  no-permission: '{prefix} &cNie masz uprawnień do użycia tej komendy!'
+  reload-success: '{prefix} &aKonfiguracja została pomyślnie przeładowana!'
+  reload-error: '{prefix} &cWystąpił błąd podczas przeładowywania konfiguracji!'
+  gui-opened: '{prefix} &aOtwarto GUI Otchłani.'
+  only-players: '{prefix} &cTa komenda może być użyta tylko przez graczy!'
+
+# Nawigacja w GUI
+navigation:
+  previous:
+    name: '&e← Poprzednia strona'
+    lore:
+      - '&7Kliknij, aby przejść do'
+      - '&7poprzedniej strony'
+  next:
+    name: '&eNastępna strona →'
+    lore:
+      - '&7Kliknij, aby przejść do'
+      - '&7następnej strony'
+  close:
+    name: '&cZamknij'
+    lore:
+      - '&7Kliknij, aby zamknąć GUI'
+  info:
+    name: '&#9B59B6&lOtchłań'
+    lore:
+      - '&7Publiczny magazyn przedmiotów'
+      - ''
+      - '&eStrona: &f{current}/{total}'
+      - '&eIlość itemów: &f{items}'
+      - ''
+      - '&7Wrzuć niepotrzebne przedmioty'
+      - '&7lub zabierz to, czego potrzebujesz!'
+
+# Wiadomości o zbieraniu itemów
+item-collection:
+  items-collected: '{prefix} &aZebrano &e{amount} &aprzedmiotów z ziemi do Otchłani!'
+  no-items: '{prefix} &7Nie znaleziono przedmiotów do zebrania.'
+
+# Wiadomości GUI
+gui:
+  auto-opened: '{prefix} &7Otchłań została automatycznie otwarta!'
+  auto-closing: '{prefix} &7GUI zostanie zamknięte za &e{seconds} &7sekund...'
+  item-added: '{prefix} &aWrzuciłeś przedmioty do Otchłani!'
+  item-taken: '{prefix} &aZabrałeś przedmioty z Otchłani!'
+
+# Wiadomości błędów
+errors:
+  config-load-error: '{prefix} &cBłąd wczytywania konfiguracji!'
+  messages-load-error: '{prefix} &cBłąd wczytywania pliku wiadomości!'
+  inventory-full: '{prefix} &cTwój ekwipunek jest pełny!'

@@ -1,0 +1,38 @@
+name: Abyss
+version: '${project.version}'
+main: dev.tremeq.abyss.Abyss
+api-version: '1.20'
+author: tremeq
+description: Plugin zarządzający niepotrzebnymi przedmiotami w specjalnym GUI
+website: https://github.com/tremeq/Abyss
+
+commands:
+  abyss:
+    description: Otwiera GUI Otchłani (EN)
+    usage: /abyss
+    permission: devotchlan.use
+    aliases: []
+  otchlan:
+    description: Otwiera GUI Otchłani (PL)
+    usage: /otchlan
+    permission: devotchlan.use
+    aliases: []
+  abyssreload:
+    description: Przeładowuje konfigurację pluginu
+    usage: /abyssreload
+    permission: devotchlan.reload
+    aliases: [otchlanreload]
+
+permissions:
+  devotchlan.use:
+    description: Pozwala na użycie komendy otwierania GUI
+    default: true
+  devotchlan.reload:
+    description: Pozwala na przeładowanie konfiguracji
+    default: op
+  devotchlan.*:
+    description: Daje wszystkie permisje pluginu
+    default: op
+    children:
+      devotchlan.use: true
+      devotchlan.reload: true

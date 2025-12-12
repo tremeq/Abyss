@@ -1,0 +1,59 @@
+# English messages for Abyss plugin
+# Author: tremeq
+# Supports color codes (&a, &c, &l etc.) and HEX (#FFFFFF)
+
+# Prefix used in messages
+prefix: '&8[&5Abyss&8]&r'
+
+# Command messages
+commands:
+  no-permission: '{prefix} &cYou don''t have permission to use this command!'
+  reload-success: '{prefix} &aConfiguration has been successfully reloaded!'
+  reload-error: '{prefix} &cAn error occurred while reloading the configuration!'
+  gui-opened: '{prefix} &aAbyss GUI has been opened.'
+  only-players: '{prefix} &cThis command can only be used by players!'
+
+# GUI navigation
+navigation:
+  previous:
+    name: '&e← Previous page'
+    lore:
+      - '&7Click to go to the'
+      - '&7previous page'
+  next:
+    name: '&eNext page →'
+    lore:
+      - '&7Click to go to the'
+      - '&7next page'
+  close:
+    name: '&cClose'
+    lore:
+      - '&7Click to close the GUI'
+  info:
+    name: '&#9B59B6&lAbyss'
+    lore:
+      - '&7Public item storage'
+      - ''
+      - '&ePage: &f{current}/{total}'
+      - '&eItems: &f{items}'
+      - ''
+      - '&7Throw unwanted items here'
+      - '&7or take what you need!'
+
+# Item collection messages
+item-collection:
+  items-collected: '{prefix} &aCollected &e{amount} &aitems from the ground into the Abyss!'
+  no-items: '{prefix} &7No items found to collect.'
+
+# GUI messages
+gui:
+  auto-opened: '{prefix} &7The Abyss has been automatically opened!'
+  auto-closing: '{prefix} &7GUI will close in &e{seconds} &7seconds...'
+  item-added: '{prefix} &aYou threw items into the Abyss!'
+  item-taken: '{prefix} &aYou took items from the Abyss!'
+
+# Error messages
+errors:
+  config-load-error: '{prefix} &cError loading configuration!'
+  messages-load-error: '{prefix} &cError loading messages file!'
+  inventory-full: '{prefix} &cYour inventory is full!'
