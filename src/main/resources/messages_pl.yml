@@ -12,6 +12,7 @@ commands:
   reload-error: '{prefix} &cWystąpił błąd podczas przeładowywania konfiguracji!'
   gui-opened: '{prefix} &aOtwarto GUI Otchłani.'
   only-players: '{prefix} &cTa komenda może być użyta tylko przez graczy!'
+  window-closed: '{prefix} &cOtchłań jest obecnie zamknięta! Poczekaj na następne okno czasowe.'
 
 # Nawigacja w GUI
 navigation:
@@ -51,6 +52,12 @@ gui:
   auto-closing: '{prefix} &7GUI zostanie zamknięte za &e{seconds} &7sekund...'
   item-added: '{prefix} &aWrzuciłeś przedmioty do Otchłani!'
   item-taken: '{prefix} &aZabrałeś przedmioty z Otchłani!'
+
+# Okno czasowe
+window:
+  opened: '{prefix} &a&lOtchłań została otwarta! &7Masz &e{duration} sekund &7aby użyć &a/otchlan&7!'
+  closing: '{prefix} &eOtchłań zostanie zamknięta za &c{seconds} sekund&e!'
+  closed: '{prefix} &cOtchłań została zamknięta! Następne okno wkrótce...'
 
 # Wiadomości błędów
 errors:

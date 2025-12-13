@@ -34,6 +34,12 @@ public class AbyssCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // Sprawdź czy okno czasowe jest otwarte
+        if (!plugin.isAbyssWindowOpen()) {
+            player.sendMessage(plugin.getMessageManager().getMessage("commands.window-closed"));
+            return true;
+        }
+
         // Otwórz GUI
         plugin.getAbyssGUI().openGUI(player);
         player.sendMessage(plugin.getMessageManager().getMessage("commands.gui-opened"));

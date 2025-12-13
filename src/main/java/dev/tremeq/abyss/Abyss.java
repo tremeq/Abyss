@@ -20,6 +20,7 @@ public class Abyss extends JavaPlugin {
     private ItemCollector itemCollector;
     private BukkitTask autoOpenTask;
     private BukkitTask autoCloseTask;
+    private boolean abyssWindowOpen = false;
 
     @Override
     public void onEnable() {
@@ -50,9 +51,12 @@ public class Abyss extends JavaPlugin {
             this.itemCollector.start();
         }
 
-        // Uruchom auto-otwieranie GUI (domyślnie wyłączone - GUI otwiera się przez komendy)
+        // Uruchom system okien czasowych (domyślnie wyłączony)
         if (getConfig().getBoolean("auto-open.enabled", false)) {
             startAutoOpen();
+        } else {
+            // Jeśli auto-open wyłączony, okno jest zawsze otwarte
+            abyssWindowOpen = true;
         }
 
         getLogger().info("Plugin został pomyślnie załadowany!");
@@ -96,11 +100,11 @@ public class Abyss extends JavaPlugin {
     }
 
     /**
-     * Uruchamia automatyczne otwieranie GUI
+     * Uruchamia system okien czasowych
      */
     private void startAutoOpen() {
         int interval = getConfig().getInt("auto-open.interval", 300);
-        int duration = getConfig().getInt("auto-open.duration", 10);
+        int duration = getConfig().getInt("auto-open.duration", 30);
 
         // Konwertuj sekundy na ticki
         long intervalTicks = interval * 20L;
@@ -109,49 +113,59 @@ public class Abyss extends JavaPlugin {
         autoOpenTask = new BukkitRunnable() {
             @Override
             public void run() {
-                // Otwórz GUI dla wszystkich graczy online
+                // Otwórz okno czasowe
+                abyssWindowOpen = true;
+
+                // Powiadom wszystkich graczy że okno jest otwarte
+                String message = messageManager.getMessage("window.opened", "duration", String.valueOf(duration));
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    abyssGUI.openGUI(player);
-                    player.sendMessage(messageManager.getMessage("gui.auto-opened"));
+                    player.sendMessage(message);
                 }
 
-                // Zaplanuj auto-zamknięcie
-                scheduleAutoClose(durationTicks);
+                getLogger().info("Okno Otchłani OTWARTE - gracze mogą używać komendy przez " + duration + " sekund");
+
+                // Zaplanuj zamknięcie okna
+                scheduleWindowClose(durationTicks);
             }
         }.runTaskTimer(this, intervalTicks, intervalTicks);
 
-        getLogger().info("Auto-otwieranie GUI uruchomione (interwał: " + interval + "s, czas otwarcia: " + duration + "s)");
+        getLogger().info("System okien czasowych uruchomiony (interwał: " + interval + "s, czas otwarcia: " + duration + "s)");
     }
 
     /**
-     * Planuje automatyczne zamknięcie GUI
+     * Planuje zamknięcie okna czasowego
      */
-    private void scheduleAutoClose(long durationTicks) {
+    private void scheduleWindowClose(long durationTicks) {
         if (autoCloseTask != null) {
             autoCloseTask.cancel();
         }
 
-        // Odliczanie przed zamknięciem
+        // Odliczanie przed zamknięciem okna
         autoCloseTask = new BukkitRunnable() {
             int secondsLeft = (int) (durationTicks / 20);
 
             @Override
             public void run() {
                 if (secondsLeft <= 0) {
-                    // Zamknij GUI dla wszystkich
+                    // Zamknij okno czasowe
+                    abyssWindowOpen = false;
+
+                    // Zamknij wszystkie otwarte GUI
+                    abyssGUI.closeAllGUIs();
+
+                    // Powiadom graczy
+                    String message = messageManager.getMessage("window.closed");
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (abyssGUI.hasOpenGUI(player)) {
-                            abyssGUI.closeGUI(player);
-                        }
+                        player.sendMessage(message);
                     }
+
+                    getLogger().info("Okno Otchłani ZAMKNIĘTE - komendy niedostępne");
                     cancel();
-                } else if (secondsLeft <= 5) {
-                    // Powiadom graczy o zamknięciu w ostatnich 5 sekundach
+                } else if (secondsLeft <= 10 && secondsLeft % 5 == 0) {
+                    // Powiadom graczy co 5 sekund w ostatnich 10 sekundach
+                    String message = messageManager.getMessage("window.closing", "seconds", String.valueOf(secondsLeft));
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        if (abyssGUI.hasOpenGUI(player)) {
-                            player.sendMessage(messageManager.getMessage("gui.auto-closing",
-                                    "seconds", String.valueOf(secondsLeft)));
-                        }
+                        player.sendMessage(message);
                     }
                     secondsLeft--;
                 } else {
@@ -204,5 +218,12 @@ public class Abyss extends JavaPlugin {
 
     public AbyssGUI getAbyssGUI() {
         return abyssGUI;
+    }
+
+    /**
+     * Sprawdza czy okno czasowe jest otwarte
+     */
+    public boolean isAbyssWindowOpen() {
+        return abyssWindowOpen;
     }
 }

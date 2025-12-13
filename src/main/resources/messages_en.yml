@@ -12,6 +12,7 @@ commands:
   reload-error: '{prefix} &cAn error occurred while reloading the configuration!'
   gui-opened: '{prefix} &aAbyss GUI has been opened.'
   only-players: '{prefix} &cThis command can only be used by players!'
+  window-closed: '{prefix} &cThe Abyss is currently closed! Wait for the next time window.'
 
 # GUI navigation
 navigation:
@@ -51,6 +52,12 @@ gui:
   auto-closing: '{prefix} &7GUI will close in &e{seconds} &7seconds...'
   item-added: '{prefix} &aYou threw items into the Abyss!'
   item-taken: '{prefix} &aYou took items from the Abyss!'
+
+# Time window messages
+window:
+  opened: '{prefix} &a&lThe Abyss has opened! &7You have &e{duration} seconds &7to use &a/abyss&7!'
+  closing: '{prefix} &eThe Abyss will close in &c{seconds} seconds&e!'
+  closed: '{prefix} &cThe Abyss has been closed! Next window coming soon...'
 
 # Error messages
 errors:
