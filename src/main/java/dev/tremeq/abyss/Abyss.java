@@ -87,8 +87,11 @@ public class Abyss extends JavaPlugin {
      * Rejestruje komendy
      */
     private void registerCommands() {
-        getCommand("abyss").setExecutor(new AbyssCommand(this));
-        getCommand("otchlan").setExecutor(new AbyssCommand(this));
+        // Użyj jednej instancji dla obu komend (optymalizacja pamięci)
+        AbyssCommand abyssCommand = new AbyssCommand(this);
+        getCommand("abyss").setExecutor(abyssCommand);
+        getCommand("otchlan").setExecutor(abyssCommand);
+
         getCommand("abyssreload").setExecutor(new AbyssReloadCommand(this));
     }
 

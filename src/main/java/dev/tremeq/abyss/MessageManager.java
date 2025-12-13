@@ -84,11 +84,7 @@ public class MessageManager {
      * Pobiera wiadomość z podstawieniami zmiennych
      */
     public String getMessage(String path, String... replacements) {
-        String message = getMessage(path);
-
-        // Podstaw {prefix}
-        String prefix = getMessage("prefix");
-        message = message.replace("{prefix}", prefix);
+        String message = getMessage(path);  // Prefix już podstawiony w getMessage(path)
 
         // Podstaw inne zmienne (pary: klucz, wartość)
         for (int i = 0; i < replacements.length - 1; i += 2) {
