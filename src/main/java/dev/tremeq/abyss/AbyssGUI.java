@@ -8,6 +8,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -18,6 +20,7 @@ public class AbyssGUI implements InventoryHolder {
     private final Abyss plugin;
     private final Map<UUID, Integer> playerPages;
     private final Map<UUID, Inventory> playerInventories;
+    private final Map<UUID, BukkitTask> playerCloseTasks;
     private final int size;
     private final int itemsPerPage;
 
@@ -25,6 +28,7 @@ public class AbyssGUI implements InventoryHolder {
         this.plugin = plugin;
         this.playerPages = new HashMap<>();
         this.playerInventories = new HashMap<>();
+        this.playerCloseTasks = new HashMap<>();
         this.size = plugin.getConfig().getInt("gui.size", 54);
         // Ostatnia linia (9 slotów) to nawigacja
         this.itemsPerPage = size - 9;
@@ -51,19 +55,64 @@ public class AbyssGUI implements InventoryHolder {
         // Otwórz GUI
         player.openInventory(inventory);
 
+        // Zaplanuj automatyczne zamknięcie po określonym czasie
+        scheduleAutoCloseForPlayer(player);
+
         if (plugin.getConfig().getBoolean("debug", false)) {
             plugin.getLogger().info("Otwarto GUI dla gracza " + player.getName() + " na stronie " + page);
         }
     }
 
     /**
+     * Planuje automatyczne zamknięcie GUI dla konkretnego gracza
+     */
+    private void scheduleAutoCloseForPlayer(Player player) {
+        // Pobierz czas otwarcia z configu (w sekundach)
+        int duration = plugin.getConfig().getInt("auto-open.duration", 10);
+
+        // Anuluj poprzedni task jeśli istnieje
+        BukkitTask existingTask = playerCloseTasks.get(player.getUniqueId());
+        if (existingTask != null) {
+            existingTask.cancel();
+        }
+
+        // Stwórz nowy task zamykania
+        BukkitTask closeTask = new BukkitRunnable() {
+            int secondsLeft = duration;
+
+            @Override
+            public void run() {
+                if (!player.isOnline() || !hasOpenGUI(player)) {
+                    cancel();
+                    playerCloseTasks.remove(player.getUniqueId());
+                    return;
+                }
+
+                if (secondsLeft <= 0) {
+                    // Zamknij GUI
+                    closeGUI(player);
+                    cancel();
+                    playerCloseTasks.remove(player.getUniqueId());
+                } else if (secondsLeft <= 5) {
+                    // Powiadom gracza o zamknięciu w ostatnich 5 sekundach
+                    player.sendMessage(plugin.getMessageManager().getMessage("gui.auto-closing",
+                            "seconds", String.valueOf(secondsLeft)));
+                    secondsLeft--;
+                } else {
+                    secondsLeft--;
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+
+        playerCloseTasks.put(player.getUniqueId(), closeTask);
+    }
+
+    /**
      * Tworzy inventory dla gracza
      */
     private Inventory createInventory(Player player, int page) {
-        String title = plugin.getMessageManager().getMessage("gui.title");
-        if (title == null || title.isEmpty()) {
-            title = plugin.getConfig().getString("gui.title", "&8&lOtchłań");
-        }
+        // Pobierz tytuł z config.yml (nie z messages!)
+        String title = plugin.getConfig().getString("gui.title", "&8&lOtchłań");
         title = plugin.getMessageManager().colorize(title);
 
         Inventory inventory = Bukkit.createInventory(this, size, title);
@@ -334,6 +383,12 @@ public class AbyssGUI implements InventoryHolder {
         player.closeInventory();
         playerPages.remove(player.getUniqueId());
         playerInventories.remove(player.getUniqueId());
+
+        // Anuluj task auto-close jeśli istnieje
+        BukkitTask closeTask = playerCloseTasks.remove(player.getUniqueId());
+        if (closeTask != null) {
+            closeTask.cancel();
+        }
     }
 
     /**
@@ -349,8 +404,16 @@ public class AbyssGUI implements InventoryHolder {
             }
         }
 
+        // Anuluj wszystkie pozostałe taski
+        for (BukkitTask task : playerCloseTasks.values()) {
+            if (task != null) {
+                task.cancel();
+            }
+        }
+
         playerPages.clear();
         playerInventories.clear();
+        playerCloseTasks.clear();
     }
 
     /**
