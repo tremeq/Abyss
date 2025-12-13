@@ -19,20 +19,28 @@ gui:
   size: 54
 
 # ============================================================
-#                  Auto-Open Settings
+#                  Time Window Settings
 # ============================================================
-# NOTE: By default, GUI opens ONLY via commands (/abyss or /otchlan)
-# You can enable automatic opening below if desired
+# TIME WINDOW SYSTEM:
+# - When ENABLED: Commands work only during periodic time windows
+#   Example: Every 5 minutes (interval), the Abyss opens for 30 seconds (duration)
+#   Players can ONLY use /abyss during these windows
+#
+# - When DISABLED: The Abyss is ALWAYS accessible via commands
+#   Players can use /abyss anytime without restrictions
 auto-open:
-  # Enable automatic GUI opening for all players
-  # Set to 'false' to allow GUI opening only via commands (recommended)
-  enabled: false
+  # Enable time window system
+  # true = Commands available only during time windows (default)
+  # false = Commands always available
+  enabled: true
 
-  # Interval in seconds between GUI openings
+  # Interval in seconds between time windows (how often windows open)
+  # Example: 300 = Every 5 minutes
   interval: 300
 
-  # Duration in seconds that the GUI stays open
-  duration: 10
+  # Duration in seconds that each time window stays open
+  # Example: 30 = Window open for 30 seconds
+  duration: 30
 
 # ============================================================
 #               Item Collection Settings

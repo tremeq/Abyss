@@ -72,6 +72,11 @@ public class MessageManager {
      */
     public String getMessage(String path) {
         String message = messages.getString(path, "&cBrak wiadomości: " + path);
+
+        // Podstaw {prefix} zawsze
+        String prefix = messages.getString("prefix", "");
+        message = message.replace("{prefix}", colorize(prefix));
+
         return colorize(message);
     }
 
