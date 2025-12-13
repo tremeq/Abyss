@@ -79,6 +79,23 @@ public class AbyssManager {
     }
 
     /**
+     * Atomowo pobiera i usuwa przedmiot z magazynu (thread-safe)
+     * Zapobiega race conditions przy jednoczesnym dostępie
+     */
+    public ItemStack takeItem(int index) {
+        synchronized (storage) {
+            if (index >= 0 && index < storage.size()) {
+                ItemStack item = storage.get(index);
+                if (item != null && !item.getType().isAir()) {
+                    storage.remove(index);
+                    return item.clone(); // Zwróć klon aby zachować dane oryginału
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Pobiera przedmiot z określonego indeksu (bez usuwania)
      */
     public ItemStack getItem(int index) {

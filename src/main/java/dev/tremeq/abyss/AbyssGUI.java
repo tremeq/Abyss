@@ -41,6 +41,13 @@ public class AbyssGUI implements InventoryHolder {
      * Otwiera GUI dla gracza na określonej stronie
      */
     public void openGUI(Player player, int page) {
+        // Walidacja strony - upewnij się że strona jest poprawna
+        AbyssManager manager = plugin.getAbyssManager();
+        int totalPages = manager.getTotalPages(itemsPerPage);
+
+        // Ogranicz stronę do ważnego zakresu
+        page = Math.max(0, Math.min(page, totalPages - 1));
+
         // Ustaw bieżącą stronę gracza
         playerPages.put(player.getUniqueId(), page);
 
@@ -249,6 +256,18 @@ public class AbyssGUI implements InventoryHolder {
 
         // Sprawdź, czy gracz ma otwarte nasze GUI
         if (current.getHolder() instanceof AbyssGUI) {
+            // Sprawdź czy strona jest nadal ważna
+            AbyssManager manager = plugin.getAbyssManager();
+            int totalPages = manager.getTotalPages(itemsPerPage);
+
+            // Jeśli obecna strona nie istnieje (np. po zebraniu itemów), przejdź do ostatniej ważnej
+            if (page >= totalPages) {
+                page = Math.max(0, totalPages - 1);
+                if (plugin.getConfig().getBoolean("debug", false)) {
+                    plugin.getLogger().info("Gracz " + player.getName() + " przeniesiony z nieistniejącej strony na stronę " + page);
+                }
+            }
+
             Inventory newInventory = createInventory(player, page);
 
             // Aktualizuj zawartość obecnego inventory
@@ -307,6 +326,11 @@ public class AbyssGUI implements InventoryHolder {
         int currentPage = getCurrentPage(player);
         AbyssManager manager = plugin.getAbyssManager();
         int totalPages = manager.getTotalPages(itemsPerPage);
+
+        // Sprawdź czy obecna strona jest nadal ważna (mogła się zmienić podczas przeglądania)
+        if (currentPage >= totalPages) {
+            currentPage = Math.max(0, totalPages - 1);
+        }
 
         if (relativeSlot == plugin.getConfig().getInt("navigation.previous-page.slot", 0)) {
             // Poprzednia strona

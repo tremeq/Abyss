@@ -91,28 +91,29 @@ public class InventoryListener implements Listener {
             case RIGHT:
                 // Zabieranie itemów z magazynu
                 if (clickedItem != null && !clickedItem.getType().isAir()) {
-                    // Pobierz item z magazynu (nie z GUI, aby mieć pewność o integralności danych)
-                    ItemStack itemFromStorage = plugin.getAbyssManager().getItem(globalIndex);
+                    // Atomowo pobierz i usuń item z magazynu (zapobiega race conditions)
+                    ItemStack itemFromStorage = plugin.getAbyssManager().takeItem(globalIndex);
 
                     if (itemFromStorage != null) {
-                        // Sklonuj item aby zachować wszystkie NBT i metadata (custom itemy)
-                        ItemStack itemToGive = itemFromStorage.clone();
-
+                        // Item już sklonowany w takeItem(), możemy go bezpiecznie użyć
                         // Spróbuj dodać item do ekwipunku gracza
-                        var remaining = player.getInventory().addItem(itemToGive);
+                        var remaining = player.getInventory().addItem(itemFromStorage);
 
                         // Sprawdź czy udało się dodać wszystkie itemy
                         if (remaining.isEmpty()) {
-                            // Wszystko OK, usuń item z magazynu
-                            plugin.getAbyssManager().removeItem(globalIndex);
-
+                            // Wszystko OK, item już usunięty z magazynu przez takeItem()
                             // Odśwież GUI dla wszystkich
                             gui.refreshAllViewers();
 
                             // Wyślij wiadomość
                             player.sendMessage(plugin.getMessageManager().getMessage("gui.item-taken"));
                         } else {
-                            // Ekwipunek pełny lub częściowo pełny
+                            // Ekwipunek pełny - musimy zwrócić item do magazynu
+                            plugin.getAbyssManager().addItem(itemFromStorage);
+
+                            // Odśwież GUI aby pokazać przywrócony item
+                            gui.refreshAllViewers();
+
                             player.sendMessage(plugin.getMessageManager().getMessage("errors.inventory-full"));
                         }
                     }
@@ -140,28 +141,29 @@ public class InventoryListener implements Listener {
             case SHIFT_RIGHT:
                 // Shift-click - zabieranie itemów
                 if (clickedItem != null && !clickedItem.getType().isAir()) {
-                    // Pobierz item z magazynu
-                    ItemStack itemFromStorage = plugin.getAbyssManager().getItem(globalIndex);
+                    // Atomowo pobierz i usuń item z magazynu (zapobiega race conditions)
+                    ItemStack itemFromStorage = plugin.getAbyssManager().takeItem(globalIndex);
 
                     if (itemFromStorage != null) {
-                        // Sklonuj item aby zachować wszystkie NBT i metadata (custom itemy)
-                        ItemStack itemToGive = itemFromStorage.clone();
-
+                        // Item już sklonowany w takeItem(), możemy go bezpiecznie użyć
                         // Spróbuj dodać item do ekwipunku gracza
-                        var remaining = player.getInventory().addItem(itemToGive);
+                        var remaining = player.getInventory().addItem(itemFromStorage);
 
                         // Sprawdź czy udało się dodać wszystkie itemy
                         if (remaining.isEmpty()) {
-                            // Wszystko OK, usuń item z magazynu
-                            plugin.getAbyssManager().removeItem(globalIndex);
-
+                            // Wszystko OK, item już usunięty z magazynu przez takeItem()
                             // Odśwież GUI dla wszystkich
                             gui.refreshAllViewers();
 
                             // Wyślij wiadomość
                             player.sendMessage(plugin.getMessageManager().getMessage("gui.item-taken"));
                         } else {
-                            // Ekwipunek pełny lub częściowo pełny
+                            // Ekwipunek pełny - musimy zwrócić item do magazynu
+                            plugin.getAbyssManager().addItem(itemFromStorage);
+
+                            // Odśwież GUI aby pokazać przywrócony item
+                            gui.refreshAllViewers();
+
                             player.sendMessage(plugin.getMessageManager().getMessage("errors.inventory-full"));
                         }
                     }
