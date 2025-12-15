@@ -23,6 +23,13 @@ public class ItemCollector extends BukkitRunnable {
 
     @Override
     public void run() {
+        collectItemsNow();
+    }
+
+    /**
+     * Natychmiast zbiera itemy z ziemi (może być wywołane bezpośrednio)
+     */
+    public void collectItemsNow() {
         if (!plugin.getConfig().getBoolean("item-collection.enabled", true)) {
             return;
         }

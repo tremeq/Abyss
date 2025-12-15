@@ -50,6 +50,10 @@ item-collection:
   enabled: true
 
   # Interval in seconds between collection cycles
+  # NOTE: When time windows are ENABLED (auto-open.enabled: true),
+  #       items are collected ONLY when windows open (ignores this interval)
+  # When time windows are DISABLED (auto-open.enabled: false),
+  #       items are collected every X seconds based on this interval
   interval: 60
 
   # Notify players when items are collected

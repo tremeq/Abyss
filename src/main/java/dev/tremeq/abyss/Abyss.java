@@ -45,18 +45,22 @@ public class Abyss extends JavaPlugin {
         // Zarejestruj listenery
         registerListeners();
 
-        // Uruchom ItemCollector
+        // Inicjalizuj ItemCollector
         if (getConfig().getBoolean("item-collection.enabled", true)) {
             this.itemCollector = new ItemCollector(this);
-            this.itemCollector.start();
         }
 
-        // Uruchom system okien czasowych (domyślnie wyłączony)
+        // Uruchom system okien czasowych
         if (getConfig().getBoolean("auto-open.enabled", false)) {
             startAutoOpen();
+            // ItemCollector będzie wywoływany przy każdym otwarciu okna czasowego
         } else {
             // Jeśli auto-open wyłączony, okno jest zawsze otwarte
             abyssWindowOpen = true;
+            // ItemCollector działa na swoim własnym timerze
+            if (itemCollector != null) {
+                itemCollector.start();
+            }
         }
 
         getLogger().info("Plugin został pomyślnie załadowany!");
@@ -118,6 +122,11 @@ public class Abyss extends JavaPlugin {
             public void run() {
                 // Otwórz okno czasowe
                 abyssWindowOpen = true;
+
+                // Zbierz wszystkie itemy z ziemi do Otchłani (synchronizacja z otwarciem okna)
+                if (itemCollector != null) {
+                    itemCollector.collectItemsNow();
+                }
 
                 // Powiadom wszystkich graczy że okno jest otwarte
                 String message = messageManager.getMessage("window.opened", "duration", String.valueOf(duration));
